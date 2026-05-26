@@ -3,12 +3,50 @@
 @import "tailwindcss/utilities";
 
 :root {
-  background: #0f1115;
-  color: #ffffff;
+  color-scheme: light;
+  background:
+    radial-gradient(circle at top left, rgba(220, 210, 242, 0.32), transparent 28%),
+    radial-gradient(circle at top right, rgba(244, 233, 255, 0.5), transparent 24%),
+    linear-gradient(180deg, #fcfbff 0%, #f5f1fb 42%, #f8f4fb 100%);
+  color: #111827;
+  font-family: var(--font-sans), sans-serif;
 }
 
 html,
 body {
-  background: #0f1115;
-  color: #ffffff;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(220, 210, 242, 0.32), transparent 28%),
+    radial-gradient(circle at top right, rgba(244, 233, 255, 0.5), transparent 24%),
+    linear-gradient(180deg, #fcfbff 0%, #f5f1fb 42%, #f8f4fb 100%);
+  color: #111827;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.46), transparent 18%),
+    radial-gradient(circle at 18% 14%, rgba(206, 181, 246, 0.18), transparent 18%),
+    radial-gradient(circle at 80% 0%, rgba(239, 227, 255, 0.22), transparent 18%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(171, 92, 255, 0.22);
+  color: #111827;
 }
