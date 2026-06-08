@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { deleteItem } from "@/lib/server";
+import { getRouteError } from "@/lib/route-errors";
 
 export const runtime = "nodejs";
 
@@ -9,8 +10,9 @@ export async function DELETE(_: Request, context: { params: Promise<{ itemId: st
     await deleteItem(itemId);
     return NextResponse.json({ success: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "删除内容失败";
-    const status = message === "内容不存在" ? 404 : 500;
+    const routeError = getRouteError(error, "删除内容失败");
+    const message = routeError.message;
+    const status = message === "内容不存在" ? 404 : routeError.status;
     return NextResponse.json({ error: message }, { status });
   }
 }

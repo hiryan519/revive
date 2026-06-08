@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
 import { runTask } from "@/lib/server";
+import { getRouteError } from "@/lib/route-errors";
 
 export const runtime = "nodejs";
 
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: error.issues[0]?.message ?? "请求参数错误" }, { status: 400 });
     }
 
-    const message = error instanceof Error ? error.message : "任务执行失败";
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    const routeError = getRouteError(error, "任务执行失败");
+    return NextResponse.json({ success: false, error: routeError.message }, { status: routeError.status });
   }
 }

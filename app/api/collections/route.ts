@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
 import { listCollections } from "@/lib/server";
+import { getRouteError } from "@/lib/route-errors";
 
 export const runtime = "nodejs";
 
@@ -21,7 +22,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.issues[0]?.message ?? "请求参数错误" }, { status: 400 });
     }
 
-    const message = error instanceof Error ? error.message : "读取内容集失败";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const routeError = getRouteError(error, "读取内容集失败");
+    return NextResponse.json({ error: routeError.message }, { status: routeError.status });
   }
 }

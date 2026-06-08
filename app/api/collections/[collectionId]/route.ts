@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
 import { deleteCollection, getCollectionDetail, renameCollection } from "@/lib/server";
+import { getRouteError } from "@/lib/route-errors";
 
 export const runtime = "nodejs";
 
@@ -19,8 +20,8 @@ export async function GET(_: Request, context: { params: Promise<{ collectionId:
 
     return NextResponse.json({ collection });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "读取内容集详情失败";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const routeError = getRouteError(error, "读取内容集详情失败");
+    return NextResponse.json({ error: routeError.message }, { status: routeError.status });
   }
 }
 
@@ -40,8 +41,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ colle
       return NextResponse.json({ error: error.issues[0]?.message ?? "请求参数错误" }, { status: 400 });
     }
 
-    const message = error instanceof Error ? error.message : "更新内容集名称失败";
-    return NextResponse.json({ error: message }, { status: 500 });
+    const routeError = getRouteError(error, "更新内容集名称失败");
+    return NextResponse.json({ error: routeError.message }, { status: routeError.status });
   }
 }
 
@@ -51,8 +52,9 @@ export async function DELETE(_: Request, context: { params: Promise<{ collection
     await deleteCollection(collectionId);
     return NextResponse.json({ success: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "删除内容集失败";
-    const status = message === "内容集不存在" ? 404 : 500;
+    const routeError = getRouteError(error, "删除内容集失败");
+    const message = routeError.message;
+    const status = message === "内容集不存在" ? 404 : routeError.status;
     return NextResponse.json({ error: message }, { status });
   }
 }
