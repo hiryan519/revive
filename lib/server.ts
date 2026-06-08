@@ -42,6 +42,7 @@ export async function upsertCollection(collectionName: string, description?: str
 
 export async function storeImportedItem(params: {
   collectionName: string;
+  collectionDescription?: string | null;
   title: string;
   contentText: string;
   contentMarkdown?: string | null;
@@ -49,7 +50,7 @@ export async function storeImportedItem(params: {
   sourceUrl?: string | null;
 }) {
   const db = getDb();
-  const collection = await upsertCollection(params.collectionName);
+  const collection = await upsertCollection(params.collectionName, params.collectionDescription);
   const chunks = createChunks(params.contentText);
   const embeddings = chunks.length ? await embedTexts(chunks) : [];
 

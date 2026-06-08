@@ -197,6 +197,9 @@ export function ImportView(props: {
                 <button type="button" onClick={() => setShowFallback(true)} className={secondary}>
                   解析失败时改用正文导入
                 </button>
+                <a href="/help#bookmarklet" className={ghost}>
+                  安装浏览器书签
+                </a>
               </div>
             </div>
             <div className={cx(panelMuted, "px-5 py-5")}>

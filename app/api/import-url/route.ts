@@ -1,28 +1,28 @@
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
-import { storeImportedItem } from "@/lib/server";
+import { importUrlToCollection } from "@/lib/import-url-service";
 import { getRouteError } from "@/lib/route-errors";
-import { importFromUrl } from "@/lib/web-import";
 
 export const runtime = "nodejs";
 
 const bodySchema = z.object({
-  collectionName: z.string().trim().min(1, "请填写内容集名称").max(80),
+  collectionName: z.string().trim().max(80).optional(),
   url: z.string().trim().url("请输入有效的网页链接"),
+  useRecentCollection: z.boolean().optional(),
+}).superRefine((body, ctx) => {
+  if (!body.useRecentCollection && !body.collectionName?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["collectionName"],
+      message: "请填写内容集名称",
+    });
+  }
 });
 
 export async function POST(request: Request) {
   try {
     const body = bodySchema.parse(await request.json());
-    const imported = await importFromUrl(body.url);
-    const stored = await storeImportedItem({
-      collectionName: body.collectionName,
-      title: imported.title,
-      contentText: imported.contentText,
-      contentMarkdown: imported.contentMarkdown,
-      sourceType: "url",
-      sourceUrl: body.url,
-    });
+    const stored = await importUrlToCollection(body);
 
     return NextResponse.json({
       success: true,
