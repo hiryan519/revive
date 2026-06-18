@@ -167,12 +167,7 @@ ${formatPreference(preferences.expressionPreference)}
 - 负向约束：
 ${formatPreference(preferences.negativePreferences)}`;
 
-  const response = await client.chat.completions.create({
-    model,
-    response_format: {
-      type: "json_object",
-    },
-    messages: [
+  const finalPrompt: OpenAI.Chat.ChatCompletionMessageParam[] = [
       {
         role: "system",
         content: `你是一个任务助手，专门帮助用户基于他们自己收藏的历史内容，完成当前面临的工作任务。
@@ -215,7 +210,16 @@ ${JSON.stringify({
   citation_indexes: [0, 1, 2],
 })}`,
       },
-    ],
+    ];
+
+  console.log("=== INJECTED PROMPT ===", JSON.stringify(finalPrompt, null, 2));
+
+  const response = await client.chat.completions.create({
+    model,
+    response_format: {
+      type: "json_object",
+    },
+    messages: finalPrompt,
   });
 
   const content = response.choices[0]?.message?.content;
