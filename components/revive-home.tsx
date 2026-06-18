@@ -822,6 +822,20 @@ export function ReviveHome({ initialScreen }: { initialScreen?: Screen }) {
   return (
     <div className="min-h-screen text-slate-900">
       <main className="mx-auto w-full max-w-[1480px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <button type="button" onClick={() => setScreen("home")} className="text-[15px] font-semibold tracking-[-0.03em] text-slate-900">
+            Revive
+          </button>
+          <nav className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={() => setScreen("import")} className={ghost}>
+              导入内容
+            </button>
+            <a href="/preferences" className={ghost}>
+              我的偏好
+            </a>
+          </nav>
+        </div>
+
         {pageError ? (
           <div className="mb-6 rounded-[18px] border border-amber-200/70 bg-amber-50/90 px-4 py-3 text-[14px] leading-6 text-amber-900 shadow-[0_10px_20px_rgba(245,220,180,0.16)]">{pageError}</div>
         ) : null}
